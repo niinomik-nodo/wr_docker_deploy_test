@@ -1,0 +1,95 @@
+version: '3.5'
+
+services:
+  node:
+    build: ./flont_end
+    volumes:
+      - ./:/usr/src/app
+    command: sh -c 'cd ./flont_end/react-app && yarn start'
+    ports:
+      - '3000:3000'
+  
+  fast-api:
+    build:
+      context: "./back_end"
+      dockerfile: "Dockerfile" 
+    # command: sh -c 'cd ./back_end/api && uvicorn main:app --reload --host 0.0.0.0'
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/usr/src/app
+  
+  db:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      TZ: ${TZ}
+    ports:
+        - ${DB_PORT}:3306
+    volumes:
+        - db-store:/var/lib/mysql
+        - ./conf/my.cnf:/etc/db/conf.d/my.cnf
+volumes:
+  db-store:
+
+# services:
+#   iedy_database_local:
+#     image: iedy_database_local
+#     platform: linux/amd64
+#     build:
+#       context: iedy_database_local
+#       dockerfile: Dockerfile
+#     container_name: iedy_database_local
+#     ports:
+#       - 8101:3306
+#     networks:
+#       - iedy_local
+#     # command: mysqld --innodb_use_native_aio=0
+
+#   iedy_api_local:
+#     image: iedy_api_local
+#     build:
+#       context: iedy_api_local
+#       dockerfile: Dockerfile
+#     container_name: iedy_api_local
+#     stdin_open: true
+#     tty: true
+#     ports:
+#       - 8103:80
+#     networks:
+#         - iedy_local
+#     depends_on:
+#       - iedy_database_local
+#     volumes:
+#       - ../../ManagementSystem:/tmp/api/iedy
+#         # Create superuser, First boot only
+#     command: bash -c '/tmp/dockerize/dockerize -wait tcp://iedy_database_local:3306 -timeout 120s && python3 /tmp/api/iedy/manage.py migrate &&python3 /tmp/api/iedy/manage.py custom_createsuperuser --noinput --username admin --password admin --email admin@email.com && python3 /tmp/api/iedy/manage.py runserver 0:80'
+#     # From secound boot
+#     # command: bash -c '/tmp/dockerize/dockerize -wait tcp://iedy_database_local:3306 -timeout 120s && python3 /tmp/api/iedy/manage.py runserver 0:80'
+
+#   # iedy_admin_local:
+#   #   image: iedy_admin_local
+#   #   build:
+#   #     context: iedy_admin_local
+#   #     dockerfile: Dockerfile
+#   #   container_name: iedy_admin_local
+#   #   stdin_open: true
+#   #   tty: true
+#   #   ports:
+#   #     - 8104:80
+#   #   networks:
+#   #     - iedy_local
+#   #   depends_on:
+#   #     - iedy_database_local
+#   #   volumes:
+#   #     - ../../Server-Admin/iedy:/tmp/admin/iedy
+#   #   command: bash -c '/tmp/dockerize/dockerize -wait tcp://iedy_database_local:3306 -timeout 120s && python3 /tmp/admin/iedy/manage.py runserver 0:80'
+
+# networks:
+#   iedy_local:
+#     name: iedy_local
