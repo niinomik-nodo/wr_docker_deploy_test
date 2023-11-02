@@ -8,6 +8,6 @@ RUN pip3 install fastapi
 RUN pip3 install "uvicorn[standard]"
 RUN pip3 install requests
 
-COPY ./api .
+COPY ./api back_end/api
 
 ENTRYPOINT ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--reload", "--port", "8000"]
