@@ -10,4 +10,4 @@ RUN pip3 install requests
 
 COPY ./api .
 
-ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--reload", "--port", "8000"]
+ENTRYPOINT ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--reload", "--port", "8000"]
