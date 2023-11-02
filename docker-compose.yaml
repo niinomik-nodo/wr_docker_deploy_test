@@ -4,8 +4,8 @@ services:
   node:
     build: ./flont_end
     volumes:
-      - ./:/usr/src/app
-    command: sh -c 'cd ./flont_end/react-app && yarn start'
+      - ./flont_end:/app
+    command: sh -c 'cd ./react-app && yarn start'
     ports:
       - '3000:3000'
   
@@ -17,7 +17,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./:/usr/src/app
+      - ./back_end/api:/app
   
   db:
     image: mysql:8
